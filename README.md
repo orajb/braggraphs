@@ -250,6 +250,11 @@ GITHUB_PAT=… BRAGGRAPHS_ADMIN_PASSWORD=… .venv/bin/python app.py
 Want to add a connector (Cloudflare, Stripe, Plausible…)? It's a single file —
 see [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Acknowledgements
+
+braggraphs exists because [@hakanu](https://github.com/hakanu) planted the
+idea — thanks, Hakan.
+
 ## License
 
 [MIT](LICENSE)
