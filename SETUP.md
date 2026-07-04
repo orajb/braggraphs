@@ -4,24 +4,23 @@ From zero to a live graph in ~10 minutes. Five steps, one optional.
 (Deploying with an AI agent? Point it at the repo — [AGENTS.md](AGENTS.md)
 follows these same steps automatically.)
 
-**You need:** a GitHub account, plus **either** Docker **or** Python 3.11+ —
-Docker is packaging convenience, not a requirement. GA4 is optional (step 4).
+**You need:** a GitHub account and Python 3.11+ (or Docker, if you prefer
+containers — every step below shows both variants). GA4 is optional (step 4).
 
-## 1. Clone
+## 1. Clone + install
 
 ```sh
 git clone https://github.com/orajb/braggraphs
 cd braggraphs
 cp .env.example .env
 cp config.yml.example config.yml
-```
 
-**No Docker?** Set up a venv now; the later steps show both variants:
-
-```sh
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 ```
+
+**Using Docker instead?** Skip the venv — compose builds everything in
+step 6.
 
 ## 2. GitHub access — 1 minute
 
@@ -138,11 +137,11 @@ cloudflare:
 Don't hunt for IDs — the pickers list what your credentials can see:
 
 ```sh
-docker compose run --rm braggraphs flask ga4-properties
-docker compose run --rm braggraphs flask cf-sites
-# or without Docker:
 .venv/bin/flask ga4-properties
 .venv/bin/flask cf-sites
+# or with Docker:
+docker compose run --rm braggraphs flask ga4-properties
+docker compose run --rm braggraphs flask cf-sites
 ```
 
 ## 6. Preflight, launch, embed
@@ -151,17 +150,17 @@ docker compose run --rm braggraphs flask cf-sites
 tells you exactly what to fix:
 
 ```sh
-docker compose run --rm braggraphs python -m core.doctor
-# or without Docker:
 .venv/bin/python -m core.doctor
+# or with Docker:
+docker compose run --rm braggraphs python -m core.doctor
 ```
 
 Every line green? **Launch:**
 
 ```sh
-docker compose up -d
-# or without Docker:
 .venv/bin/gunicorn -w 1 --threads 4 -b 0.0.0.0:8000 'app:create_app(start_scheduler=True)'
+# or with Docker:
+docker compose up -d
 
 curl http://localhost:8000/healthz    # {"status": "ok", ...}
 ```

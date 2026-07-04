@@ -25,9 +25,9 @@ into any site with a single `<img>` tag:
 - **Cloudflare Web Analytics** — visits, pageviews, **bot traffic excluded by
   design** (via an Analytics-Read API token)
 
-No JS for consumers. No chart libraries. MIT licensed. `docker-compose up`
-and you're running — or skip Docker entirely: it's plain Python 3.11+ with a
-SQLite file, `pip install` + one gunicorn command works the same.
+No JS for consumers. No chart libraries. MIT licensed. It's plain
+Python 3.11+ with a SQLite file — `pip install`, one gunicorn command, and
+you're running. Prefer containers? `docker-compose up` works too.
 
 > **Deploying with an AI agent?** Point it at this repo — [AGENTS.md](AGENTS.md)
 > is a first-class deploy guide it can follow end-to-end, and
@@ -89,17 +89,17 @@ simplicity with star-history depth, styled to match your site.
    grants before anything launches, with a fix hint per failing line:
 
    ```sh
-   docker compose run --rm braggraphs python -m core.doctor
-   docker-compose up -d
-   curl http://localhost:8000/healthz
-   ```
-
-   **Without Docker** (identical behavior — same `.env`, same `./data`):
-
-   ```sh
    python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
    .venv/bin/python -m core.doctor
    .venv/bin/gunicorn -w 1 --threads 4 -b 0.0.0.0:8000 'app:create_app(start_scheduler=True)'
+   curl http://localhost:8000/healthz
+   ```
+
+   **Or with Docker** (identical behavior — same `.env`, same `./data`):
+
+   ```sh
+   docker compose run --rm braggraphs python -m core.doctor
+   docker-compose up -d
    ```
 
    The scheduler fetches immediately on boot — including a one-time historic

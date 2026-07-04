@@ -34,8 +34,7 @@ command variants throughout.
   from step 6):
   `git clone https://github.com/orajb/braggraphs ~/apps/braggraphs && cd ~/apps/braggraphs`
 - Pick the install path:
-  - **Docker** if `docker compose version` succeeds.
-  - **Bare Python** otherwise (needs `python3 --version` ≥ 3.11):
+  - **Bare Python** is the default (needs `python3 --version` ≥ 3.11):
     `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`.
     Run the pip install *now*, not lazily — the step-4 preflight imports the
     app's dependencies, and a missing install surfaces as a confusing
@@ -45,6 +44,8 @@ command variants throughout.
     (exactly one worker — the scheduler runs in-process). On a server, wrap
     it in a systemd unit so it survives reboots; on Windows use
     `.venv\Scripts\python app.py`.
+  - **Docker** (`docker compose version` succeeds) if the user prefers
+    containers or Python 3.11+ isn't available.
   - Only ask the user to install something if *neither* Docker nor
     Python 3.11+ is present.
 - Locate the user's existing website project (you'll edit its HTML in step 6).
