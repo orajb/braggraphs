@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}dashboard · braggraphs{% endblock %}
+{% block content %}
+<div class="mb-4 flex items-baseline justify-between">
+  <h1 class="text-lg font-semibold tracking-tight">Tracked metrics</h1>
+  <span class="text-xs text-neutral-400">{{ tiles | length }} graphs</span>
+</div>
+
+<div class="mb-6 flex flex-wrap items-center gap-2">
+  <span class="text-xs text-neutral-400">theme:</span>
+  {% for name, palette in themes.items() %}
+  <a href="{{ url_for('admin.dashboard') }}{{ '?theme=' + name if name != 'light' else '' }}"
+     title="{{ name }}"
+     class="flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px]
+            {{ 'border-indigo-400 bg-indigo-50 text-indigo-700' if (active_theme or 'light') == name else 'border-neutral-200 bg-white text-neutral-500 hover:border-neutral-400' }}">
+    <span class="inline-block h-3 w-3 rounded-full border border-black/10"
+          style="background: linear-gradient(135deg, {{ palette.bg }} 50%, {{ palette.accent }} 50%)"></span>
+    {{ name }}
+  </a>
+  {% endfor %}
+</div>
+
+{% if tiles %}
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+  {% for tile in tiles %}
+  <div class="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+    <img src="{{ tile.graph_url }}" width="400" height="120" class="w-full"
+         alt="{{ tile.project }} {{ tile.metric }}">
+    <div class="mt-3 flex items-center justify-between text-xs">
+      <span class="text-neutral-500">{{ tile.project }} · {{ tile.metric.replace('_', ' ') }}</span>
+      <span class="flex items-center gap-2">
+        <span class="font-semibold text-neutral-900">{{ tile.value }}</span>
+        {% if tile.delta %}
+        <span class="{{ 'text-emerald-600' if tile.delta_up else 'text-red-600' }}">{{ tile.delta }}</span>
+        {% endif %}
+      </span>
+    </div>
+    <div class="mt-2 text-[11px] text-neutral-400">
+      embed: <code class="rounded bg-neutral-100 px-1 py-0.5">{{ tile.graph_url }}</code>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="rounded-xl border border-dashed border-neutral-300 p-10 text-center text-sm text-neutral-500">
+  Nothing tracked yet — add repos or GA4 properties to <code>config.yml</code> and restart.
+</p>
+{% endif %}
+{% endblock %}

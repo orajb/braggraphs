@@ -1,0 +1,42 @@
+# braggraphs configuration.
+# Copy to config.yml and edit. Secrets do NOT go here — they live in .env.
+
+github:
+  cadence: daily
+  repos:
+    - owner: your-github-username    # <-- replace
+      repo: your-repo-name           # <-- replace
+      metrics: [stars, forks, commits_weekly]
+    # track as many repos as you like:
+    # - owner: your-github-username
+    #   repo: another-repo
+    #   metrics: [stars]
+
+# Optional — delete this block if you don't use Google Analytics.
+# property_id values are normally written here by the picker
+# (`flask ga4-properties` lists everything your service account can see).
+# Metrics are limited to the v1 allowlist: pageviews | sessions | active_users.
+#ga4:
+#  cadence: daily
+#  properties:
+#    - label: example.com             # used as the graph's project slug
+#      property_id: "123456789"       # GA4 numeric property ID
+#      metrics: [pageviews, sessions, active_users]
+
+# Optional — Cloudflare Web Analytics (bot traffic excluded by design: the
+# numbers come from the browser beacon, which crawlers never execute).
+# site_tag values come from the picker: `flask cf-sites`.
+# Metrics allowlist: visits | pageviews.
+#cloudflare:
+#  cadence: daily
+#  account_id: "0123456789abcdef0123456789abcdef"   # 32-hex, from the dashboard URL
+#  sites:
+#    - label: example.com             # used as the graph's project slug
+#      site_tag: "0123456789abcdef0123456789abcdef"
+#      metrics: [visits, pageviews]
+
+admin:
+  enabled: true
+
+embed:
+  powered_by: true

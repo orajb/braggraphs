@@ -1,0 +1,15 @@
+{
+  "data": {
+    "viewer": {
+      "accounts": [
+        {
+          "sites": [
+            {"count": 51, "sum": {"visits": 30}, "dimensions": {"siteTag": "0123456789abcdef0123456789abcdef", "requestHost": "zubrafex.com"}},
+            {"count": 92, "sum": {"visits": 88}, "dimensions": {"siteTag": "fedcba9876543210fedcba9876543210", "requestHost": "quvomatic.com"}},
+            {"count": 12, "sum": {"visits": 9}, "dimensions": {"siteTag": "0123456789abcdef0123456789abcdef", "requestHost": "www.zubrafex.com"}}
+          ]
+        }
+      ]
+    }
+  }
+}

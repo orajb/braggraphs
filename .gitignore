@@ -1,0 +1,24 @@
+# Secrets — never commit
+.env
+*.serviceaccount.json
+ga4-credentials.json
+
+# Local data (SQLite, generated secret key)
+data/
+*.db
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Private product spec — local only, never published
+docs/spec.md

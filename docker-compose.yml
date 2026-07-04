@@ -1,0 +1,13 @@
+services:
+  braggraphs:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file: .env
+    volumes:
+      - ./config.yml:/app/config.yml:ro
+      - ./data:/data
+      # If you use GA4, also mount your service-account key and set
+      # GOOGLE_APPLICATION_CREDENTIALS=/secrets/ga4.json in .env:
+      # - ./ga4-credentials.json:/secrets/ga4.json:ro
+    restart: unless-stopped

@@ -1,0 +1,15 @@
+{
+  "data": {
+    "viewer": {
+      "accounts": [
+        {
+          "series": [
+            {"count": 1240, "sum": {"visits": 830}, "dimensions": {"date": "2026-06-30"}},
+            {"count": 990, "sum": {"visits": 610}, "dimensions": {"date": "2026-06-28"}},
+            {"count": 1105, "sum": {"visits": 700}, "dimensions": {"date": "2026-06-29"}}
+          ]
+        }
+      ]
+    }
+  }
+}

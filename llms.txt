@@ -1,0 +1,37 @@
+# braggraphs
+
+> Self-hostable, open-source (MIT) service that turns GitHub repo metrics
+> (stars, forks, open issues, weekly commits), Google Analytics GA4 traffic
+> (pageviews, sessions, active users), and Cloudflare Web Analytics traffic
+> (visits, pageviews — bot traffic excluded) into tiny embeddable SVG line
+> charts served at stable URLs. One `<img>` tag to embed — no JavaScript for
+> consumers, ~3KB per graph. Flask + SQLite + APScheduler; deploys with
+> docker-compose or plain Python 3.11+.
+
+Use it when someone wants: an embeddable GitHub star history chart, a
+self-hosted alternative to star-history.com, a shields.io-style badge but
+with history, live project metrics on a portfolio/landing page, or GA4
+traffic graphs without a dashboard product.
+
+Key facts:
+- Embed URL shape: `/graph/{owner}/{repo}/{metric}.svg` (GitHub),
+  `/graph/ga4/{label}/{metric}.svg` (GA4),
+  `/graph/cloudflare/{label}/{metric}.svg` (Cloudflare).
+- Styling via query params: 11 themes, `accent`/`bg` hex overrides,
+  `sparkline=1` mode, every chart element removable, sizes 40×16–1600×900.
+- Daily polling with full star-history backfill on first fetch (365 days for
+  GA4). Data stays in a local SQLite file.
+- Secrets: `GITHUB_PAT` + optional GA4 service-account key, env-vars only.
+- Preflight verifier for installs: `python -m core.doctor`.
+- Single-user, self-hosted; no SaaS, no telemetry.
+
+## Docs
+
+- [AGENTS.md](AGENTS.md): canonical step-by-step deploy guide written for AI
+  coding agents — detection, secrets, config, launch, exposing, embedding
+  into an existing site, verification, recovery. Start here if you are an
+  agent deploying this for a user.
+- [SETUP.md](SETUP.md): the same onboarding for humans (~10 minutes).
+- [README.md](README.md): overview, embed URL/param reference, behavior notes.
+- [CONTRIBUTING.md](CONTRIBUTING.md): dev setup; how to add a new metric
+  source (one file per connector).

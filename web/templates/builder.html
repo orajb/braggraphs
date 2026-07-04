@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% block title %}embed builder · braggraphs{% endblock %}
+{% block content %}
+<div class="mb-6">
+  <h1 class="text-lg font-semibold tracking-tight">Embed builder</h1>
+  <p class="mt-1 text-xs text-neutral-500">
+    Dial in a graph, then copy the tag. Tip: for tiny portfolio sparklines use a
+    size preset and switch off the chrome — or just hit <em>sparkline</em>.
+  </p>
+</div>
+
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
+  <div class="space-y-5 text-xs">
+
+    <div>
+      <label class="mb-1 block font-medium text-neutral-700">Graph</label>
+      <select id="b-graph" class="w-full rounded-md border border-neutral-300 bg-white px-2 py-1.5">
+        {% for g in graphs %}
+        <option value="{{ g.path }}">{{ g.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label class="mb-1 block font-medium text-neutral-700">Theme</label>
+      <div id="b-themes" class="flex flex-wrap gap-1.5">
+        {% for name, palette in themes.items() %}
+        <button type="button" data-theme="{{ name }}" title="{{ name }}"
+          class="theme-chip flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-2 py-1 text-[11px] text-neutral-500 hover:border-neutral-400">
+          <span class="inline-block h-3 w-3 rounded-full border border-black/10"
+                style="background: linear-gradient(135deg, {{ palette.bg }} 50%, {{ palette.accent }} 50%)"></span>
+          {{ name }}
+        </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div>
+      <label class="mb-1 block font-medium text-neutral-700">Size</label>
+      <div class="mb-2 flex flex-wrap gap-1.5">
+        <button type="button" class="size-preset rounded-md border border-neutral-200 bg-white px-2 py-1 hover:border-neutral-400" data-w="400" data-h="120">card 400×120</button>
+        <button type="button" class="size-preset rounded-md border border-neutral-200 bg-white px-2 py-1 hover:border-neutral-400" data-w="720" data-h="160">wide 720×160</button>
+        <button type="button" class="size-preset rounded-md border border-neutral-200 bg-white px-2 py-1 hover:border-neutral-400" data-w="260" data-h="90">compact 260×90</button>
+        <button type="button" class="size-preset rounded-md border border-neutral-200 bg-white px-2 py-1 hover:border-neutral-400" data-w="120" data-h="32" data-sparkline="1">sparkline 120×32</button>
+        <button type="button" class="size-preset rounded-md border border-neutral-200 bg-white px-2 py-1 hover:border-neutral-400" data-w="80" data-h="20" data-sparkline="1">micro 80×20</button>
+      </div>
+      <div class="flex items-center gap-2">
+        <input id="b-w" type="number" value="400" min="40" max="1600"
+               class="w-20 rounded-md border border-neutral-300 px-2 py-1.5"> ×
+        <input id="b-h" type="number" value="120" min="16" max="900"
+               class="w-20 rounded-md border border-neutral-300 px-2 py-1.5">
+        <select id="b-period" class="ml-auto rounded-md border border-neutral-300 bg-white px-2 py-1.5">
+          <option value="30d">30 days</option>
+          <option value="90d">90 days</option>
+          <option value="1y">1 year</option>
+          <option value="all">all time</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <label class="mb-1 block font-medium text-neutral-700">Elements</label>
+      <label class="mb-2 flex items-center gap-2 rounded-md border border-neutral-200 bg-white px-2 py-1.5">
+        <input id="b-sparkline" type="checkbox">
+        <span><strong>sparkline</strong> — just the line (+ dot), transparent</span>
+      </label>
+      <div id="b-toggles" class="grid grid-cols-2 gap-x-3 gap-y-1.5">
+        <label class="flex items-center gap-1.5"><input type="checkbox" data-param="label" checked> title label</label>
+        <label class="flex items-center gap-1.5"><input type="checkbox" data-param="value" checked> current value</label>
+        <label class="flex items-center gap-1.5"><input type="checkbox" data-param="grid" checked> gridlines</label>
+        <label class="flex items-center gap-1.5"><input type="checkbox" data-param="baseline" checked> baseline</label>
+        <label class="flex items-center gap-1.5"><input type="checkbox" data-param="border" checked> border</label>
+        <label class="flex items-center gap-1.5"><input type="checkbox" data-param="dates" checked> date row</label>
+        <label class="flex items-center gap-1.5"><input type="checkbox" data-param="dot" checked> end dot</label>
+      </div>
+    </div>
+
+    <div>
+      <label class="mb-1 block font-medium text-neutral-700">Colour overrides</label>
+      <div class="flex items-center gap-3">
+        <label class="flex items-center gap-1.5">
+          <input id="b-accent-on" type="checkbox">
+          <input id="b-accent" type="color" value="#5b6ee8" class="h-6 w-9 cursor-pointer rounded border border-neutral-300">
+          accent
+        </label>
+        <label class="flex items-center gap-1.5">
+          <input id="b-transparent" type="checkbox"> transparent bg
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="mb-2 flex items-center justify-between">
+      <span class="text-xs font-medium text-neutral-700">Preview</span>
+      <label class="flex items-center gap-1.5 text-[11px] text-neutral-500">
+        surface <input id="b-surface" type="color" value="#f5f5f4"
+          class="h-5 w-8 cursor-pointer rounded border border-neutral-300">
+      </label>
+    </div>
+    <div id="b-preview-wrap" class="mb-4 flex min-h-48 items-center justify-center rounded-xl border border-neutral-200 p-8"
+         style="background:#f5f5f4">
+      <img id="b-preview" src="" alt="preview">
+    </div>
+    <div class="mb-2 flex items-center justify-between">
+      <span class="text-xs font-medium text-neutral-700">Embed tag</span>
+      <button id="b-copy" type="button"
+        class="rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-500">copy</button>
+    </div>
+    <pre class="overflow-x-auto rounded-lg bg-neutral-900 p-4 text-[11px] leading-relaxed text-neutral-100"><code id="b-snippet"></code></pre>
+  </div>
+</div>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  let theme = "light";
+
+  function toggles() {
+    const out = {};
+    document.querySelectorAll("#b-toggles input").forEach((el) => {
+      out[el.dataset.param] = el.checked;
+    });
+    return out;
+  }
+
+  function buildUrl() {
+    const params = new URLSearchParams();
+    const sparkline = $("b-sparkline").checked;
+    if (theme !== "light") params.set("theme", theme);
+    const w = $("b-w").value, h = $("b-h").value;
+    if (w !== "400") params.set("w", w);
+    if (h !== "120") params.set("h", h);
+    if ($("b-period").value !== "30d") params.set("period", $("b-period").value);
+    if (sparkline) {
+      params.set("sparkline", "1");
+      if (!toggles().dot) params.set("dot", "0");
+    } else {
+      for (const [name, on] of Object.entries(toggles())) {
+        if (!on) params.set(name, "0");
+      }
+      if ($("b-transparent").checked) params.set("bg", "transparent");
+    }
+    if ($("b-accent-on").checked) params.set("accent", $("b-accent").value.slice(1));
+    const qs = params.toString();
+    return $("b-graph").value + (qs ? "?" + qs : "");
+  }
+
+  function update() {
+    const sparkline = $("b-sparkline").checked;
+    document.querySelectorAll("#b-toggles input").forEach((el) => {
+      if (el.dataset.param !== "dot") el.disabled = sparkline;
+    });
+    $("b-transparent").disabled = sparkline;
+    const path = buildUrl();
+    $("b-preview").src = path;
+    $("b-preview").width = $("b-w").value;
+    $("b-preview").height = $("b-h").value;
+    $("b-snippet").textContent =
+      '<img src="' + window.location.origin + path + '"\n' +
+      '     width="' + $("b-w").value + '" height="' + $("b-h").value + '"\n' +
+      '     alt="braggraphs" loading="lazy">';
+    document.querySelectorAll(".theme-chip").forEach((el) => {
+      el.classList.toggle("border-indigo-400", el.dataset.theme === theme);
+      el.classList.toggle("bg-indigo-50", el.dataset.theme === theme);
+    });
+  }
+
+  document.querySelectorAll(".theme-chip").forEach((el) =>
+    el.addEventListener("click", () => { theme = el.dataset.theme; update(); }));
+  document.querySelectorAll(".size-preset").forEach((el) =>
+    el.addEventListener("click", () => {
+      $("b-w").value = el.dataset.w;
+      $("b-h").value = el.dataset.h;
+      $("b-sparkline").checked = !!el.dataset.sparkline;
+      update();
+    }));
+  document.querySelectorAll("#b-toggles input, #b-sparkline, #b-transparent, #b-accent-on")
+    .forEach((el) => el.addEventListener("change", update));
+  ["b-graph", "b-period"].forEach((id) => $(id).addEventListener("change", update));
+  ["b-w", "b-h"].forEach((id) => $(id).addEventListener("input", update));
+  $("b-accent").addEventListener("input", () => { $("b-accent-on").checked = true; update(); });
+  $("b-surface").addEventListener("input", () => {
+    $("b-preview-wrap").style.background = $("b-surface").value;
+  });
+  $("b-copy").addEventListener("click", () => {
+    navigator.clipboard.writeText($("b-snippet").textContent).then(() => {
+      $("b-copy").textContent = "copied!";
+      setTimeout(() => ($("b-copy").textContent = "copy"), 1200);
+    });
+  });
+
+  update();
+})();
+</script>
+{% endblock %}

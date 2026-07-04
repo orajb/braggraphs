@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}settings · braggraphs{% endblock %}
+{% block content %}
+<div class="mb-6 flex items-center justify-between">
+  <h1 class="text-lg font-semibold tracking-tight">Settings</h1>
+  <button
+    hx-post="{{ url_for('admin.fetch_now') }}"
+    hx-target="#status-area"
+    hx-swap="innerHTML"
+    class="rounded-md bg-indigo-600 px-3 py-2 text-xs font-medium text-white hover:bg-indigo-500">
+    Fetch now
+  </button>
+</div>
+
+<h2 class="mb-2 text-sm font-medium text-neutral-700">Tracked</h2>
+<ul class="mb-8 space-y-1 text-xs text-neutral-600">
+  {% for source, project, metric in tracked %}
+  <li><code class="rounded bg-neutral-100 px-1.5 py-0.5">{{ source }}</code> {{ project }} · {{ metric }}</li>
+  {% endfor %}
+</ul>
+
+<h2 class="mb-2 text-sm font-medium text-neutral-700">Last fetch</h2>
+<div id="status-area">
+  {% include "_status.html" %}
+</div>
+{% endblock %}
